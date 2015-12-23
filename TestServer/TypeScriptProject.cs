@@ -6,8 +6,14 @@ namespace TestServer
 {
 	class TypeScriptProject
 	{
+		public static string TypeScriptCompilerPath { get; set; }
+		
 		public static void CompileAllProjects(string rootPath, bool watchForChanges)
 		{
+			if (TypeScriptCompilerPath == null) {
+				throw new Exception("No path to tsc specified.");
+			}
+			
 			var configPath = Path.Combine(rootPath, "tsconfig.json");
 			if (File.Exists(configPath)) CompileProject(rootPath, watchForChanges);
 			
@@ -21,7 +27,7 @@ namespace TestServer
 		{
 			Console.WriteLine("Compiling TypeScript project at '{0}'", path);
 			
-			var startInfo = new ProcessStartInfo("tsc");
+			var startInfo = new ProcessStartInfo(TypeScriptCompilerPath);
 			
 			if (watchForChanges) {
 				startInfo.Arguments = "--watch";
